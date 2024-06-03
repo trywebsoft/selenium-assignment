@@ -77,7 +77,7 @@ const runSeleniumScript = async () => {
 
     //adding proxy to chrome driver
     let option = new chrome.Options();
-    option.addArguments("--headless","--window-size=1920,1080");
+    option.addArguments(`--proxy-server=http://${newProxyHost}:${newProxyPort}`,"--headless","--window-size=1920,1080");
 
     let driver = await new Builder()
     .forBrowser(Browser.CHROME)
