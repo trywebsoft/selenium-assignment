@@ -1,6 +1,7 @@
 require("dotenv").config();
 const { Builder, Browser, By, Key, until } = require('selenium-webdriver');
 const chrome = require("selenium-webdriver/chrome");
+const webDriverIO = require("webdriverio");
 const chromeDriver = require("chromedriver");
 const proxyChain = require("proxy-chain");
 const express = require('express');
@@ -11,75 +12,53 @@ const app = express();
 
 connectClient();
 
-//List of proxies provided by proxymesh
-const PROXY_LIST = [
-    { host: 'us-ca.proxymesh.com', port: '31280', username: 'testseleni21292', password: 'test@1234' },
-    { host: 'us-wa.proxymesh.com', port: '31280', username: 'testseleni21292', password: 'test@1234' },
-    { host: 'fr.proxymesh.com', port: '31280', username: 'testseleni21292', password: 'test@1234' },
-    { host: 'jp.proxymesh.com', port: '31280', username: 'testseleni21292', password: 'test@1234' },
-    { host: 'au.proxymesh.com', port: '31280', username: 'testseleni21292', password: 'test@1234' },
-    { host: 'nl.proxymesh.com', port: '31280', username: 'testseleni21292', password: 'test@1234' },
-    { host: 'de.proxymesh.com', port: '31280', username: 'testseleni21292', password: 'test@1234' },
-    { host: 'sg.proxymesh.com', port: '31280', username: 'testseleni21292', password: 'test@1234' },
-    { host: 'us-il.proxymesh.com', port: '31280', username: 'testseleni21292', password: 'test@1234' },
-    { host: 'us-tx.proxymesh.com', port: '31280', username: 'testseleni21292', password: 'test@1234' },
-    { host: 'us-dc.proxymesh.com', port: '31280', username: 'testseleni21292', password: 'test@1234' },
-    { host: 'us-ny.proxymesh.com', port: '31280', username: 'testseleni21292', password: 'test@1234' },
-    { host: 'us-fl.proxymesh.com', port: '31280', username: 'testseleni21292', password: 'test@1234' },
-    { host: 'uk.proxymesh.com', port: '31280', username: 'testseleni21292', password: 'test@1234' },
-    { host: 'ch.proxymesh.com', port: '31280', username: 'testseleni21292', password: 'test@1234' },
-    { host: 'in.proxymesh.com', port: '31280', username: 'testseleni21292', password: 'test@1234' },
-    { host: 'open.proxymesh.com', port: '31280', username: 'testseleni21292', password: 'test@1234' },
-    { host: 'world.proxymesh.com', port: '31280', username: 'testseleni21292', password: 'test@1234' },
-    { host: 'usisp.proxymesh.com', port: '31280', username: 'testseleni21292', password: 'test@1234' },
-    // Add more proxies as needed
-];
-
-let currentProxyIndex = 0;
-
 //Fetching current ip being used.
-const fetchIP = async (driver) => {
-    await driver.get('https://api.ipify.org?format=json');
-    const tokenElem = await driver.wait(until.elementLocated(By.css("pre")),30000);
+const fetchIP = async (browser) => {
+    await browser.navigateTo('https://api.ipify.org?format=json');
+    const tokenElem = await browser.$("pre");
     const token = await JSON.parse(await tokenElem.getText());
     return token.ip;
 }
 
 //Fetching the trends from twitter
-const fetchTrend = async (driver) => {
+const fetchTrend = async (browser) => {
 
     const trends = [];
     
-    await driver.get('https://x.com/i/flow/login');
+    await browser.navigateTo('https://x.com/i/flow/login');
+
+    let usernameField = browser.$('input[autocomplete=username]');
+    await usernameField.waitForClickable({timeout:60000});
+    await usernameField.setValue(process.env.X_ID);
     
-    await driver.wait(until.urlIs("https://x.com/i/flow/login"),120000);
+    let loginBtn = await browser.$('[role=button].r-13qz1uu');
+    await loginBtn.waitForClickable({timeout:60000});
+    await loginBtn.click();
 
-    let usernameField = await driver.wait(until.elementLocated(By.css('input[autocomplete=username]')),60000);
-    await usernameField.sendKeys(process.env.X_ID);
+    let passwordField = await browser.$('[type=password]');
+    await passwordField.waitForClickable({timeout:60000});
+    await passwordField.setValue(process.env.X_PASSWORD);
 
-    let loginBtn = await driver.wait(until.elementLocated(By.css('[role=button].r-13qz1uu')),60000);
-    loginBtn.click();
+    loginBtn = await browser.$('[data-testid*=Login_Button]');
+    await loginBtn.waitForClickable({timeout:60000});
+    await loginBtn.click();
 
-    let passwordField = await driver.wait(until.elementLocated(By.css('[type=password]')),60000);
-    await passwordField.sendKeys(process.env.X_PASSWORD);
+    await browser.pause(60000);
 
-    loginBtn = await driver.wait(until.elementLocated(By.css('[data-testid*=Login_Button]')),60000);
-    loginBtn.click();
+    let trendingNow = await browser.$$('div[data-testid="trend"]');
 
-    let trendingNow = await driver.wait(until.elementLocated(By.css('div[aria-label="Timeline: Trending now"]')),120000);
-
-    await driver.sleep(60000);
-
-    let top5 = await trendingNow.findElements(By.css('span'));
+    await browser.pause(20000);
 
     //filtering out redundant data
-    for(let trendingTopic of top5){
-        let fontWeight = await trendingTopic.getCssValue('font-weight');
-        
-        if(fontWeight==700){
-        let text= await trendingTopic.getText();
-        if(!trends.find((data)=>data==text))
-            trends.push(text);
+    for(let trendingTopic of trendingNow){
+        let top5 = await trendingTopic.$$('span');
+        for(let obj of top5){
+            let fontWeight = await obj.getCSSProperty('font-weight');
+            if(fontWeight.value==700){
+            let text= await obj.getText();
+            if(!trends.find((data)=>data==text))
+                trends.push(text);
+            }
         }
     }
 
@@ -88,27 +67,24 @@ const fetchTrend = async (driver) => {
 
 //Main Selenium script
 const runSeleniumScript = async () => {
-    const proxy = PROXY_LIST[currentProxyIndex];
 
     //using proxy chain to authenticate proxy and create a temporay new proxy
-    const proxyAnonymized = await proxyChain.anonymizeProxy(`http://dash213:${proxy.password}@us-ca.proxymesh.com:${proxy.port}`);
+    const proxyAnonymized = await proxyChain.anonymizeProxy(`http://dash213:test1234@us-ca.proxymesh.com:31280`);
     const newProxy = new URL(proxyAnonymized);
 
     const newProxyHost = newProxy.hostname;
     const newProxyPort = newProxy.port;
 
-    //adding proxy to chrome driver
-    let option = new chrome.Options();
-    option.addArguments(`proxy-server=http://${newProxyHost}:${newProxyPort}`,"headless","window-size=1920,1080");
-
-    let driver = await new Builder()
-    .forBrowser('chrome')
-    .setChromeOptions(option)
-    .build();
+    const browser = await webDriverIO.remote({
+        capabilities: {
+            browserName: 'chrome',
+            "goog:chromeOptions":{args:[`proxy-server=http://${newProxyHost}:${newProxyPort}`]}
+          }
+    });
     
     try{
-        const trends = await fetchTrend(driver);
-        const ip = await fetchIP(driver);
+        const trends = await fetchTrend(browser);
+        const ip = await fetchIP(browser);
         const d = new Date();
         const date = d.toLocaleDateString();
         const time = d.toLocaleTimeString();
@@ -119,8 +95,8 @@ const runSeleniumScript = async () => {
         console.log("Error"+e);
     }
     finally{
-        await driver.quit();
-        currentProxyIndex = (currentProxyIndex + 1) % PROXY_LIST.length;
+        chromeDriver.stop();
+        await browser.deleteSession();
     }
 }
 

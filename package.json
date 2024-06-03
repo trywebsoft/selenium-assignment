@@ -25,7 +25,8 @@
     "mongodb": "^6.7.0",
     "path": "^0.12.7",
     "proxy-chain": "^2.4.0",
-    "selenium-webdriver": "^4.21.0"
+    "selenium-webdriver": "^4.21.0",
+    "webdriverio": "^8.38.2"
   },
   "devDependencies": {
     "nodemon": "^3.1.2"
