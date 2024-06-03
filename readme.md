@@ -2,14 +2,14 @@
 
 ### How to setup project?
 
-`
-run: git clone https://github.com/KaranManral/selenium-assignment
-run: npm install
-`
+- Run: ` git clone https://github.com/KaranManral/selenium-assignment `
+
+- Run: ` npm install `
+
 - Change the credentials in .env file
 
-`
-run: npm start
-`
+### How to run project?
+
+- Run: ` npm start `
 
 - Open localhost:3000 in browser and you are good to go.
