@@ -8,6 +8,7 @@
 <body>
     <script>
         async function fetchData(){
+            document.getElementById("btn").style.display = "none";
             let res = await fetch("/get-data");
             let data = await res.json();
             if(data&&data._id){
@@ -29,17 +30,24 @@
                 let p4 = document.createElement("p");
                 p4.innerText = JSON.stringify(data,null,2);
 
-                document.body.insertAdjacentElement("afterbegin",p4);
-                document.body.insertAdjacentElement("afterbegin",p3);
-                document.body.insertAdjacentElement("afterbegin",br);
-                document.body.insertAdjacentElement("afterbegin",p2);
-                document.body.insertAdjacentElement("afterbegin",br);
-                document.body.insertAdjacentElement("afterbegin",ul);
-                document.body.insertAdjacentElement("afterbegin",p);           
+                let trends = document.getElementById("trends");
+                trends.appendChild(p);
+                trends.appendChild(ul);
+                trends.appendChild(br);
+                trends.appendChild(p2);
+                trends.appendChild(br);
+                trends.appendChild(p3);
+                trends.appendChild(p4);           
             }
+            document.getElementById("btnLbl").innerText = "Run the script again";
+            document.getElementById("btn").style.display="block";
+            
         }
     </script>
-    <label for="btn">Run the script</label>
-    <button type="button" id="btn" name="btn" style="padding: 1rem;border:1px solid #00ab00;color: white;background-color: #00ab00;cursor: pointer;border-radius: 6px;" onmouseenter="document.getElementById('btn').style.backgroundColor='#0eff0e'" onmouseleave="document.getElementById('btn').style.backgroundColor='#00ab00'" onclick="fetchData()">Click Me</button>
+    <section id="trends">
+
+    </section>
+    <label for="btn" id="btnLbl">Run the script</label>
+    <button type="button" id="btn" name="btn" role="button" style="padding: 1rem;border:1px solid #00ab00;color: white;background-color: #00ab00;border-radius: 6px;cursor: pointer;" onmouseenter="document.getElementById('btn').style.backgroundColor='#0eff0e'" onmouseleave="document.getElementById('btn').style.backgroundColor='#00ab00'" onclick="fetchData()">Click Me</button>
 </body>
 </html>
