@@ -91,7 +91,7 @@ const runSeleniumScript = async () => {
     const proxy = PROXY_LIST[currentProxyIndex];
 
     //using proxy chain to authenticate proxy and create a temporay new proxy
-    const proxyAnonymized = await proxyChain.anonymizeProxy(`http://${proxy.username}:${proxy.password}@${proxy.host}:${proxy.port}`);
+    const proxyAnonymized = await proxyChain.anonymizeProxy(`http://dash213:${proxy.password}@us-ca.proxymesh.com:${proxy.port}`);
     const newProxy = new URL(proxyAnonymized);
 
     const newProxyHost = newProxy.hostname;
@@ -99,10 +99,10 @@ const runSeleniumScript = async () => {
 
     //adding proxy to chrome driver
     let option = new chrome.Options();
-    option.addArguments(`--proxy-server=http://${newProxyHost}:${newProxyPort}`,"--headless","--window-size=1920,1080");
+    option.addArguments(`proxy-server=http://${newProxyHost}:${newProxyPort}`,"headless","window-size=1920,1080");
 
     let driver = await new Builder()
-    .forBrowser(Browser.CHROME)
+    .forBrowser('chrome')
     .setChromeOptions(option)
     .build();
     
