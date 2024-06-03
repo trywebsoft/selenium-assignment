@@ -1,6 +1,7 @@
 require("dotenv").config();
 const { Builder, Browser, By, Key, until } = require('selenium-webdriver');
 const chrome = require("selenium-webdriver/chrome");
+const chromeDriver = require("chromedriver");
 const proxyChain = require("proxy-chain");
 const express = require('express');
 const path = require('path');
@@ -100,7 +101,8 @@ const runSeleniumScript = async () => {
     let option = new chrome.Options();
     option.addArguments(`--proxy-server=http://${newProxyHost}:${newProxyPort}`,"--headless","--window-size=1920,1080");
 
-    let driver = await new Builder().forBrowser(Browser.CHROME)
+    let driver = await new Builder()
+    .forBrowser(Browser.CHROME)
     .setChromeOptions(option)
     .build();
     

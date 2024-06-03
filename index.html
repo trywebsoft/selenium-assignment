@@ -9,6 +9,8 @@
     <script>
         async function fetchData(){
             document.getElementById("btn").style.display = "none";
+            let trends = document.getElementById("trends");
+            trends.innerHTML = "";
             let res = await fetch("/get-data");
             let data = await res.json();
             if(data&&data._id){
@@ -30,7 +32,6 @@
                 let p4 = document.createElement("p");
                 p4.innerText = JSON.stringify(data,null,2);
 
-                let trends = document.getElementById("trends");
                 trends.appendChild(p);
                 trends.appendChild(ul);
                 trends.appendChild(br);
