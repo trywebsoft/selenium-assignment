@@ -40,7 +40,7 @@ let currentProxyIndex = 0;
 //Fetching current ip being used.
 const fetchIP = async (driver) => {
     await driver.get('https://api.ipify.org?format=json');
-    const tokenElem = await driver.wait(until.elementLocated(By.css("pre")),3000);
+    const tokenElem = await driver.wait(until.elementLocated(By.css("pre")),30000);
     const token = await JSON.parse(await tokenElem.getText());
     return token.ip;
 }
@@ -52,23 +52,23 @@ const fetchTrend = async (driver) => {
     
     await driver.get('https://x.com/i/flow/login');
     
-    await driver.wait(until.urlIs("https://x.com/i/flow/login"),20000);
+    await driver.wait(until.urlIs("https://x.com/i/flow/login"),120000);
 
-    let usernameField = await driver.wait(until.elementLocated(By.css('input[autocomplete=username]')),10000);
+    let usernameField = await driver.wait(until.elementLocated(By.css('input[autocomplete=username]')),60000);
     await usernameField.sendKeys(process.env.X_ID);
 
-    let loginBtn = await driver.wait(until.elementLocated(By.css('[role=button].r-13qz1uu')),10000);
+    let loginBtn = await driver.wait(until.elementLocated(By.css('[role=button].r-13qz1uu')),60000);
     loginBtn.click();
 
-    let passwordField = await driver.wait(until.elementLocated(By.css('[type=password]')),10000);
+    let passwordField = await driver.wait(until.elementLocated(By.css('[type=password]')),60000);
     await passwordField.sendKeys(process.env.X_PASSWORD);
 
-    loginBtn = await driver.wait(until.elementLocated(By.css('[data-testid*=Login_Button]')),10000);
+    loginBtn = await driver.wait(until.elementLocated(By.css('[data-testid*=Login_Button]')),60000);
     loginBtn.click();
 
-    let trendingNow = await driver.wait(until.elementLocated(By.css('div[aria-label="Timeline: Trending now"]')),20000);
+    let trendingNow = await driver.wait(until.elementLocated(By.css('div[aria-label="Timeline: Trending now"]')),120000);
 
-    await driver.sleep(6000);
+    await driver.sleep(60000);
 
     let top5 = await trendingNow.findElements(By.css('span'));
 
