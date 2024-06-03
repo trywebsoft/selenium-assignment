@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        async function fetchData(){
+            let res = await fetch("/get-data");
+            let data = await res.json();
+            if(data&&data._id){
+                let p = document.createElement("p");
+                p.innerText=`These are the most happening topics as on ${data.date} ${data.time}`;
+                let br = document.createElement("br");
+                let ul = document.createElement("ul");
+                for(let i=0;i<5;i++){
+                    let li = document.createElement("li");
+                    li.innerText = data.trends[i];
+                    ul.appendChild(li);
+                }
+                let p2 = document.createElement("p");
+                p2.innerText=`The IP address used for this query was ${data.ip_addr}`;
+                
+                let p3 = document.createElement("p");
+                p3.innerText=`Here's a JSON extract of this record from MongoDB`;
+
+                let p4 = document.createElement("p");
+                p4.innerText = JSON.stringify(data,null,2);
+
+                document.body.insertAdjacentElement("afterbegin",p4);
+                document.body.insertAdjacentElement("afterbegin",p3);
+                document.body.insertAdjacentElement("afterbegin",br);
+                document.body.insertAdjacentElement("afterbegin",p2);
+                document.body.insertAdjacentElement("afterbegin",br);
+                document.body.insertAdjacentElement("afterbegin",ul);
+                document.body.insertAdjacentElement("afterbegin",p);           
+            }
+        }
+    </script>
+    <label for="btn">Run the script</label>
+    <button type="button" id="btn" name="btn" style="padding: 1rem;border:1px solid #00ab00;color: white;background-color: #00ab00;cursor: pointer;border-radius: 6px;" onmouseenter="document.getElementById('btn').style.backgroundColor='#0eff0e'" onmouseleave="document.getElementById('btn').style.backgroundColor='#00ab00'" onclick="fetchData()">Click Me</button>
+</body>
+</html>
