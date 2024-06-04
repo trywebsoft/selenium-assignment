@@ -9,6 +9,7 @@
     <script>
         async function fetchData(){
             document.getElementById("btn").style.display = "none";
+            document.getElementById("btnLbl").innerText = "It will hardly take 2-5 minutes depending on proxy";
             let trends = document.getElementById("trends");
             trends.innerHTML = "";
             let res = await fetch("/get-data");

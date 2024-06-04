@@ -44,10 +44,10 @@ const fetchTrend = async (driver) => {
     await driver.sleep(2000);
     loginBtn.click();
 
-    await driver.sleep(30000);
+    await driver.sleep(120000);
     let trendingNow = await driver.wait(until.elementLocated(By.css('div[aria-label="Timeline: Trending now"]')),20000);
 
-    await driver.sleep(10000);
+    await driver.sleep(60000);
 
     let top5 = await trendingNow.findElements(By.css('span'));
 
