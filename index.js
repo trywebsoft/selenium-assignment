@@ -1,7 +1,7 @@
 require("dotenv").config();
 const { Builder, Browser, By, Key, until } = require('selenium-webdriver');
 const chrome = require("selenium-webdriver/chrome");
-const chromeDriver = require("chromedriver");
+// const chromeDriver = require("chromedriver");
 const proxyChain = require("proxy-chain");
 const express = require('express');
 const path = require('path');
@@ -69,7 +69,7 @@ const fetchTrend = async (driver) => {
 const runSeleniumScript = async () => {
 
     //using proxy chain to authenticate proxy and create a temporay new proxy
-    const proxyAnonymized = await proxyChain.anonymizeProxy(`http://dash213:test@1234@$us-ca.proxymesh.com:31280`);
+    const proxyAnonymized = await proxyChain.anonymizeProxy(`http://flash1234:test1234@sg.proxymesh.com:31280`);
     const newProxy = new URL(proxyAnonymized);
 
     const newProxyHost = newProxy.hostname;
@@ -77,7 +77,11 @@ const runSeleniumScript = async () => {
 
     //adding proxy to chrome driver
     let option = new chrome.Options();
-    option.addArguments(`--proxy-server=http://${newProxyHost}:${newProxyPort}`,"--headless","--window-size=1920,1080");
+    option.addArguments("--headless");
+    option.addArguments("--no-sandbox");
+    option.addArguments("--disable-gpu");
+    option.addArguments("--window-size=1920,1080");
+    option.addArguments(`--proxy-server=http://${newProxyHost}:${newProxyPort}`);
 
     let driver = await new Builder()
     .forBrowser(Browser.CHROME)
