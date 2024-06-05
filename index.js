@@ -82,7 +82,12 @@ const runSeleniumScript = async () => {
     option.addArguments("--disable-gpu");
     option.addArguments("--window-size=1920,1080");
     option.addArguments(`--proxy-server=http://${newProxyHost}:${newProxyPort}`);
-    option.addArguments(['user-agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"'])
+    option.addArguments(['user-agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"']);
+    option.addArguments('--ignore-certificate-errors');
+    option.addArguments('--allow-running-insecure-content');
+    option.addArguments('--disable-dev-shm-usage');
+    option.addArguments('--start-maximized');
+    option.addArguments('--disable-extensions');
 
     let driver = await new Builder()
     .forBrowser(Browser.CHROME)
