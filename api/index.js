@@ -77,6 +77,9 @@ const runSeleniumScript = async () => {
     const newProxyHost = newProxy.hostname;
     const newProxyPort = newProxy.port;
 
+    // Path to your downloaded ChromeDriver
+    const chromeDriverPath = path.resolve(__dirname, '../chromedriver.exe');
+
     //adding proxy to chrome driver
     let option = new chrome.Options();
     option.addArguments("--headless");
@@ -94,6 +97,7 @@ const runSeleniumScript = async () => {
     let driver = await new Builder()
     .forBrowser(Browser.CHROME)
     .setChromeOptions(option)
+    .setChromeService(new chrome.ServiceBuilder(chromeDriverPath))
     .build();
     
     try{
