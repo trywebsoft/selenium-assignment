@@ -5,9 +5,11 @@ const chrome = require("selenium-webdriver/chrome");
 const proxyChain = require("proxy-chain");
 const express = require('express');
 const path = require('path');
-const { connectClient,getTrends,addData,closeConnection } = require('./mongoDB');
+const { connectClient,getTrends,addData,closeConnection } = require('../js/mongoDB');
 
 const app = express();
+
+app.use(express.static('public'));
 
 connectClient();
 
@@ -111,8 +113,8 @@ const runSeleniumScript = async () => {
     }
 }
 
-app.get("/",(req,res)=>{
-    res.sendFile("index.html",{root:path.join(__dirname)});
+app.get('/',(req,res)=>{
+  res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
 });
 
 app.get("/get-data",async (req,res)=>{
@@ -123,8 +125,10 @@ app.get("/get-data",async (req,res)=>{
 
 app.listen(3000,()=>{
     console.log("App is listening on 3000");
-})
+});
 
 app.on("close", async () => {
     await closeConnection();
 });
+
+module.exports=app;
