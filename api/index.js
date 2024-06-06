@@ -12,7 +12,7 @@ const app = express();
 app.use(express.static('public'));
 
 // Path to your downloaded ChromeDriver
-const chromeDriverPath = path.resolve(__dirname, '../public/bin/chromedriver');
+const chromeDriverPath = path.resolve(__dirname, '../bin/chromedriver');
 
 connectClient();
 
@@ -87,10 +87,8 @@ const runSeleniumScript = async () => {
     option.addArguments("--disable-gpu");
     option.addArguments("--window-size=1920,1080");
     option.addArguments(`--proxy-server=http://${newProxyHost}:${newProxyPort}`);
-    option.addArguments(['user-agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"']);
     option.addArguments('--ignore-certificate-errors');
     option.addArguments('--allow-running-insecure-content');
-    option.addArguments('--disable-dev-shm-usage');
     option.addArguments('--start-maximized');
     option.addArguments('--disable-extensions');
 
