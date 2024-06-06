@@ -1,7 +1,7 @@
 require("dotenv").config();
 const { Builder, Browser, By, Key, until } = require('selenium-webdriver');
 const chrome = require("selenium-webdriver/chrome");
-// const chromeDriver = require("chromedriver");
+const chromeDriver = require("chromedriver");
 const proxyChain = require("proxy-chain");
 const express = require('express');
 const path = require('path');
@@ -10,9 +10,6 @@ const { connectClient,getTrends,addData,closeConnection } = require('../js/mongo
 const app = express();
 
 app.use(express.static('public'));
-
-// Path to your downloaded ChromeDriver
-const chromeDriverPath = path.resolve(__dirname, '../bin/chromedriver');
 
 connectClient();
 
@@ -95,7 +92,6 @@ const runSeleniumScript = async () => {
     let driver = await new Builder()
     .forBrowser(Browser.CHROME)
     .setChromeOptions(option)
-    .setChromeService(new chrome.ServiceBuilder(chromeDriverPath))
     .build();
     
     try{
