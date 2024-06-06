@@ -11,6 +11,9 @@ const app = express();
 
 app.use(express.static('public'));
 
+// Path to your downloaded ChromeDriver
+const chromeDriverPath = path.resolve(__dirname, '../public/bin/chromedriver');
+
 connectClient();
 
 //Fetching current ip being used.
@@ -76,9 +79,6 @@ const runSeleniumScript = async () => {
 
     const newProxyHost = newProxy.hostname;
     const newProxyPort = newProxy.port;
-
-    // Path to your downloaded ChromeDriver
-    const chromeDriverPath = path.resolve(__dirname, '../bin/chromedriver');
 
     //adding proxy to chrome driver
     let option = new chrome.Options();
