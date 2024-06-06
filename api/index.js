@@ -78,7 +78,7 @@ const runSeleniumScript = async () => {
     const newProxyPort = newProxy.port;
 
     // Path to your downloaded ChromeDriver
-    const chromeDriverPath = path.resolve(__dirname, '../chromedriver.exe');
+    const chromeDriverPath = path.resolve(__dirname, '../bin/chromedriver');
 
     //adding proxy to chrome driver
     let option = new chrome.Options();
